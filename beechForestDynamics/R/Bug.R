@@ -1,14 +1,13 @@
 #' Bug
 #' @title Bug
 #' @detail
-#' @param rst_doy
-#' @param rst_scl
-#' @param rst_fn
-#' 
-#' @return 
+#' @param rst_doy Variable, die gestackte Tiffs "16_days_composite_day_of_the_year" enthält
+#' @param rst_scl Variable, die gestackte Tiffs von scaling, temporal aggregation, deseasoning and trend computation enthält
+#'
+#' @return rst_fn Raster, das sich aus dem Funktionsaufruf temporalComposite() ergbit
 
-#'# 
-#'substr(Datei die reingegeben wird, Startposition, Endposition) wählt tiffs von 1 bis 22 aus
+#'#
+#'substr(Datei die reingegeben wird, Startposition, Endposition) Wählt Tiffs von 1. bis 22. Position der Liste aus
 #'extractDate
 #'temporalComposite
 
