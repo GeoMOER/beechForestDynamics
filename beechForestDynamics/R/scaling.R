@@ -53,6 +53,3 @@ scaling <- function(input,cores = 1, scalefac = 10000, incon = NA, output){
   base::detach("package:raster")
   base::detach("package:rgdal")
 }
-
-scaling(input = "D:/modis_carpathian_mountains/modis/modis_whittaker_tiles/c0001-0511_r0001-0522/",
-        output = "D:/modis_carpathian_mountains/modis/modis_scaled_tiles/c0001-0511_r0001-0522/")
