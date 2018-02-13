@@ -1,64 +1,42 @@
 #' Whittaker smoother 
 #' @title Whittaker smoother
 #' @details this function smoothes a time series vegetation index based on satellite data 
-#' @usage whittaker_smoother(input, begin, end, lambda, nIter, threshold)
-#' @param input, path where input is
-#' @param begin, Character, first date of time series in format "YYYY-MM-DD"
-#' @param end, Character, last date of time series in format "YYYY-MM-DD"
-#' @param lambda, integer, strength of smoothing
+#' @usage whittaker_smoother(input, quality_rst, doy_rst, begin, end, whittaker_files, lambda, nIter, threshold)
+#' dependent on package "MODIS"
+#' @param ndvi_oc_rst, stacked vegetation index files
+#' @param quality_rst, stacked quality checked files
+#' @param doy_rst, stacked day of year files
+#' @param whittaker_files, path where whittaker output files shall be stored
+#' @param lambda, integer, strength of smoothing 
 #' @param nIter, integer, number of iteration for the upper envelope fitting
 #' @param threshold, integer, threshold for outlier values
+#' @param prefix, character, file name prefix
+#' @param suffix, character, file name suffix
 #' 
 #' @return geo-tiff data
+#' 
+#' @references Nauss, T., Detsch, F.
+#' @author Hanzl, A., Hahn, L.
+#'
+#'@examples
+#' \dontrun{
+#' whittaker_smoother(ndvi_oc_rst = ndvi_oc_rst, quality_rst = path_modis_qua_tiles,
+#'                    doy_rst = path_modis_doy_tiles, whittaker_files = path_modis_whittaker_tiles, 
+#'                    lambda = 6000, nIter = 3, threshold = 2000
+#'                    prefix = "ab", suffix = "ws")
+#'}
 
-
-##### Whittaker smoother #####   Leonie Hahn, Andreas Hanzl
-whittaker_smoother <- function(input, begin, end, lambda, nIter, threshold){
-
-dirs = list.dirs(input)[-1]
-
-for(dir in dirs){
-  p =  "^.*_NDVI_.*\\.tif$"
-  vi = preStack(path=dir, pattern=p)
+##### Whittaker smoother #####  
+whittaker_smoother <- function(ndvi_oc_rst, quality_rst, doy_rst, output_subdirectory, 
+                               lambda, nIter, threshold, prefix, suffix){
+  outfilepath <- compileOutFilePath(input_filepath = ndvi_oc_rst,
+                     output_subdirectory = output_subdirectory, prefix = prefix, suffix = suffix)
   
-  dirw = paste0(path_modis_qua_tiles, basename(dir), "/")
-  p =  "^.*_Quality_.*\\.tif$"
-  w = preStack(path=dirw, pattern = p)
-  
-  dirt = paste0(path_modis_doy_tiles, basename(dir), "/")
-  p =  "^.*_day_.*\\.tif$"
-  t = preStack(path=dirt, pattern = p)
-  
-  timeInfo = orgTime(basename(vi), nDays="asIn", begin=format(as.Date(begin), '%Y%j'), 
-                     end=format(as.Date(end), '%Y%j'), pillow = 0, pos1 = 14, pos2 = 20)
-  vi = preStack(files=vi, timeInfo=timeInfo)
-  
-  
-  if(all(substr(basename(vi), 14, 20) == substr(basename(w), 10, 16)) &
-     all(substr(basename(vi), 14, 20) == substr(basename(t), 10, 16))){
-    
-    subpath = paste0(path_modis_whittaker_tiles, basename(dir), "/")
-    if (!dir.exists(subpath))
-      dir.create(subpath, recursive = TRUE)
-    
-    whittaker.raster(vi = vi, w = w, t = t,
-                     timeInfo = timeInfo,
-                     lambda = lambda, nIter = nIter,
-                     prefixSuffix = c("MYD13Q1", substr(basename(vi[1]), 21, 60)),
-                     outDirPath = subpath,
-                     outlierThreshold = threshold,
-                     overwrite = TRUE, format = "raster")
-    
-  } else {
-    stop
-  }
-  
+      whittaker.raster(vi = ndvi_oc_rst, w = quality_rst, t = doy_rst,
+                       timeInfo = orgTime(vi),
+                       lambda = lambda, nIter = nIter,
+                       prefixSuffix = c(prefix, suffix),
+                       outDirPath = outfilepath,
+                       outlierThreshold = threshold,
+                       overwrite = TRUE, format = "raster")
 }
-}
-
-whittaker_smoother(input = path_modis_outliers_tiles,
-                  begin = "2002-07-04",
-                  end = "2017-12-11",
-                  lambda = 6000,
-                  nIter = 3,
-                  threshold = 2000)
