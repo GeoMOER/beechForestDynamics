@@ -1,6 +1,3 @@
-
-# kill all history -> rm(list = ls()) <- MArina will das in jedes Skript... Bitte ((erste Zeile))
-
 #' trend
 #' @title trend
 #' @details rank correlation coefficient Tau
