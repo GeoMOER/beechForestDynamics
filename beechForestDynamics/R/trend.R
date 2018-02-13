@@ -1,8 +1,12 @@
+
+# kill all history -> rm(list = ls()) <- MArina will das in jedes Skript... Bitte ((erste Zeile))
+
 #' trend
 #' @title trend
 #' @details rank correlation coefficient Tau
+#' need raster and gimms package
 #' @usage trend(file_in, p, prewhitening, method, filename)
-#' @param file_in raster or rasterstack
+#' @param file_in raster or numeric layer
 #' @param p, numeric, defaults to 0.001. Significance level to be tested
 #' @param prewhitening,logical, If TRUE (default), pre-whitening is applied prior to the Mann-Kendall trend test.
 #' @param method The prewhitening method to apply ("yuepilon", "zhang")
@@ -16,16 +20,15 @@ trend <- function(file_in, p, prewhitening, method, filename){
     rst_stau = gimms::significantTau(x = file_in,
                                      p = p,
                                      prewhitening = prewhitening,
-                                     method = method)
+                                     method = method,
+                                     filename = filename)
 
-    if (!dir.exists(filename[1]))
-      dir.create(filename[1], recursive = TRUE)
 
-    foreach(i = raster::unstack(rst_stau), j = as.list(filename)) %do% {
-      raster::writeRaster(i,
-                          filename = j,
-                          format = "GTiff",
-                          overwrite = TRUE)
-    }
-    return(rst_stau)
+    # store data in .tif-file
+    raster::writeRaster(rst_stau, filename = filename,
+                        format = "GTiff",
+                        overwrite = TRUE)
+
+   rst_stau <- raster::stack(rst_stau)
+   return(rst_stau)
 }
