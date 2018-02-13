@@ -17,8 +17,6 @@
 #'/donotrun{
 #'scaling(input,cores = 1, scalefac = 10000, incon = NA)}
 #'
-### outpath, temp, temp2 etc. , SCL_variabel
-
 scaling <- function(input,cores = 1, scalefac = 10000, incon = NA, output){
   base::require(raster)
   base::require(rgdal)
