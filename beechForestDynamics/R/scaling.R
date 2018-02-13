@@ -5,7 +5,7 @@
 #'@description The scaling function takes up the previously created .tif-files that a  Whittaker smoother ran through.
 #'The function changes the scaling of the NDVI modis data (default = /10000), rejects inconsistend values (default = NA).
 #'The function returns new calculated .tif-files with pattern /SCL_ into the modis_scaled_tiles file. The function requires
-#'the "raster" and "rgdal" packages.
+#'the "raster" and "rgdal" packages. The function returns also a raster stack.
 #'
 #'@param input Set input directory
 #'@param cores Set cores for parallel working (default = 1 core)
@@ -48,6 +48,8 @@ scaling <- function(input,cores = 1, scalefac = 10000, incon = NA, output){
                       # store data in .tif-file
                       raster::writeRaster(rst, filename = j, format = "GTiff", overwrite = TRUE)
                     }
+  lst_scl_sc <- raster::stack(lst_scl)
+  base::return(lst_scl_sc)
   base::detach("package:raster")
   base::detach("package:rgdal")
 }
