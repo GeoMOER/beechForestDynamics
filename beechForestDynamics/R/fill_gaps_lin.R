@@ -20,7 +20,7 @@
 #'@author Johannes Schnell, Laura Giese
 
 fill_gaps_lin = function(rst_fn, out_path){
-  
+  lib = c("doParallel", "raster", "rgdal", "GSODTools")
   rst_fn_mat = raster::as.matrix(rst_fn)
   # 43701
   rst_fn_mat_filled =
