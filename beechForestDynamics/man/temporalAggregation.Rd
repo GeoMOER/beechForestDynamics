@@ -4,20 +4,35 @@
 \alias{temporalAggregation}
 \title{Temporal aggregation}
 \usage{
-temporalAggregation(input)
+temporalAggregation(rstack, rstack_doy, layer_dates, outputfilepathes,
+  interval = "fortnight", fun = max, na.rm = TRUE, cores = 4L)
 }
 \arguments{
-\item{input}{Set input file (default= path_modis_whittaker_tiles, from 00_set_environment call)}
+\item{rstack}{Raster stack of MODIS composite files}
+
+\item{rstack_doy}{Raster stack of associated day of year information to rstack}
+
+\item{layer_dates}{Date vector corresponding to input layers (see MODIS::temporalComposite)}
+
+\item{outputfilepathes}{Full path and names of all output layers to be written to disk}
+
+\item{interval}{Aggregation interval (see MODIS::temporalComposite),}
+
+\item{fun}{Aggregation function (see MODIS::temporalComposite)}
+
+\item{na.rm}{NA handling (see MODIS::temporalComposite)}
+
+\item{cores}{Paralleliziation (see MODIS::temporalComposite)}
 }
 \description{
-The temporal function takes up the previously created scaled .tif-files (scaled-function).
-The function changes the input .tif-files to a stack with temporal composite. The function returns new calculated
-.tif-files with pattern /day_of_the_year into the modis_doy_tiles file (The file must be created beforehand).
-The function requires the "raster" package.
+The function is a wrapper arround MODIS::temporalComposit.
+It is hardly usefull since it only adds the writing.
 }
 \examples{
 \dontrun{
-temporalAggregation(input)
+temporalAggregation(rstack, rstack_doy, layer_dates, outputfilepathes,
+interval = "fortnight", fun = max, na.rm = TRUE,
+cores = 4L)
 }
 }
 \author{

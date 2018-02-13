@@ -41,7 +41,7 @@ deseason = function(rstack,
     dir.create(outFilePath[1], recursive = TRUE)
 
 
-  forech::foreach(i = raster::unstack(rst_dsn), j = as.list(outFilePath)) %do% {
+  foreach::foreach(i = raster::unstack(rst_dsn), j = as.list(outFilePath)) %do% {
     raster::writeRaster(i,
                         filename = j,
                         format = "GTiff",

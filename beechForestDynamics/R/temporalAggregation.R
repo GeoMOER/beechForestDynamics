@@ -1,32 +1,40 @@
-#'@title Temporal aggregation
-#'@aliases temporalAggregation
-#'@author Santwoski, A. & C. Weber
-#'@description The temporal function takes up the previously created scaled .tif-files (scaled-function).
-#'The function changes the input .tif-files to a stack with temporal composite. The function returns new calculated
-#'.tif-files with pattern /day_of_the_year into the modis_doy_tiles file (The file must be created beforehand).
-#'The function requires the "raster" package.
+#' @title Temporal aggregation
+#' @aliases temporalAggregation
+#' @author Santwoski, A. & C. Weber
+#' @description The function is a wrapper arround MODIS::temporalComposit.
+#' It is hardly usefull since it only adds the writing.
 #'
-#'@param input Set input file (default= path_modis_whittaker_tiles, from 00_set_environment call)
+#' @param rstack Raster stack of MODIS composite files
+#' @param rstack_doy Raster stack of associated day of year information to rstack
+#' @param layer_dates Date vector corresponding to input layers (see MODIS::temporalComposite)
+#' @param outputfilepathes Full path and names of all output layers to be written to disk
+#' @param interval Aggregation interval (see MODIS::temporalComposite),
+#' @param fun Aggregation function (see MODIS::temporalComposite)
+#' @param na.rm NA handling (see MODIS::temporalComposite)
+#' @param cores Paralleliziation (see MODIS::temporalComposite)
 #'
 #'@export temporalAggregation
 #'
 #'@examples
 #'\dontrun{
-#'temporalAggregation(input)
+#'temporalAggregation(rstack, rstack_doy, layer_dates, outputfilepathes,
+#'interval = "fortnight", fun = max, na.rm = TRUE,
+#'cores = 4L)
 #'}
 
-temporalAggregation=function(input){
-  ## Input data:
-  tiflist=list.dirs(input)[-1]
-  files = list.files(tiflist, pattern = "^.*_NDVI_.*\\.tif$", full.names = TRUE)
-  rst_scl = stack(files)
-  temp=substr(tiflist,1, nchar((tiflist))-nchar(basename(tiflist)))
-  temp2=substr(tiflist,1, nchar((temp))-nchar(basename(temp))-1)
-  subpath = paste0(temp2,"modis_doy_tiles/", basename(tiflist), "/")
-  files_doy = list.files(subpath, pattern = "*day_of_the_year.*\\.tif", full.names = TRUE)
-  ## Temporal composite:
-  start = which(substr(basename(files_doy), 10, 16) %in% substr(names(rst_scl)[1], 13, 19))
-  end = which(substr(basename(files_doy), 10, 16) %in% substr(names(rst_scl)[nlayers(rst_scl)], 13, 19))
-  ## Stack temporal composite:
-  rst_doy = stack(files_doy[start:end])
+temporalAggregation = function(rstack, rstack_doy, layer_dates, outputfilepathes,
+                               interval = "fortnight", fun = max, na.rm = TRUE,
+                               cores = 4L){
+
+  rst_fn = MODIS::temporalComposite(x = rstack, y = rstack_doy,
+                             timeInfo = layer_dates, interval = interval,
+                             fun = fun, na.rm = na.rm, cores = cores)
+
+  writeRaster(rst_fn, filename = outputfilepathes,
+              format = "GTiff", bylayer = TRUE, overwrite = TRUE)
+
 }
+
+
+
+
