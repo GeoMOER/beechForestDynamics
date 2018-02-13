@@ -17,6 +17,8 @@ writeName=function(indir,newdir,prefix=NA,suffix=NA){
       tmp1=base::substr(i,1,tmp-1)
       tmp2=base::dirname(i)
       tmp3=base::paste0(tmp2,"/",newdir,"/",basename(tmp1),"_",suffix,".tif")
+      if(!dir.exists(paste0(tmp2,"/",newdir)))
+        dir.create(paste0(tmp2,"/",newdir))
       newname=base::append(newname,tmp3)
     })
   }else{
@@ -26,6 +28,8 @@ writeName=function(indir,newdir,prefix=NA,suffix=NA){
       tmp1=base::substr(i,1,tmp-1)
       tmp2=base::dirname(i)
       tmp3=base::paste0(tmp2,"/",newdir,"/",prefix,"_",basename(tmp1),".tif")
+      if(!dir.exists(paste0(tmp2,"/",newdir)))
+        dir.create(paste0(tmp2,"/",newdir))
       newname=base::append(newname,tmp3)
     })
     }
