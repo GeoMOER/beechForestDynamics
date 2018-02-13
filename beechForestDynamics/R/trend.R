@@ -18,12 +18,12 @@ trend <- function(x, p, prewhitening, method, df, filename){
   subpath = paste0(path_modis_mktrends_tiles, basename(dir), "/")
       if (!dir.exists(subpath))
       dir.create(subpath, recursive = TRUE)
-    
+
   #create files for significantTau from rasterstack deseason
     fls_stau = paste0(subpath, "MK_", substr(names(rst_dsn)[1], 1, 25),
                       substr(names(rst_dsn)[length(names(rst_dsn))],
                              18, length(names(rst_dsn))))
-    
+
    #create vector for tau 1.000 and tau 0.010
      fls_stau = c(paste0(fls_stau, "_tau_1.000.tif"),
                  paste0(fls_stau, "_tau_0.010.tif"))
@@ -34,16 +34,16 @@ trend <- function(x, p, prewhitening, method, df, filename){
     rst_stau_0010 = significantTau(rst_dsn, p = 0.01,
                                    prewhitening = TRUE, method = "yuepilon",
                                    filename = fls_stau[2])
-    
+
+    ## Combine trend tiles
+    #list tau 1.000 files
+    trends_stau_1000 = list.files(path_modis_mktrends_tiles, pattern = glob2rx("*tau_1.000.tif"),
+                                  recursive = TRUE, full.names = TRUE)
+    #merge tau 1.000 files
+    mergeTiledRasters(rasterlist = trends_stau_1000,  overlap = 10, outpath = paste0(path_modis_results, "MK_DSN_FLD_A2003_2016_tau_1.000.tif"))
+
   }
-  
 
 
 
-## Combine trend tiles
-#list tau 1.000 files
-trends_stau_1000 = list.files(path_modis_mktrends_tiles, pattern = glob2rx("*tau_1.000.tif"),
-                              recursive = TRUE, full.names = TRUE)
-#merge tau 1.000 files
-mergeTiledRasters(rasterlist = trends_stau_1000,  overlap = 10, outpath = paste0(path_modis_results, "MK_DSN_FLD_A2003_2016_tau_1.000.tif"))
 
