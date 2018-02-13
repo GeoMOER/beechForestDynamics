@@ -1,47 +1,42 @@
-#'Scale Raster
-#'@title scaleRaster
-#'@aliases Scaling
-#'@author Santwoski, A. & C. Weber
-#'@description The scaling function takes up a raster-stack [raster::stack()] and scales it.
-#'The function changes the scaling (default = /10000) and rejects inconsistend values (default = NA).
-#'The function returns new calculated .tif-files with pattern /SCL_ into output file path and returns also a raster stack.
+#' Scale raster data
+#' @title scaleRaster
+#' @aliases Scaling
+#' @author Santwoski, A. & C. Weber
+#' @description The scaling function takes up a \code{raster::stack} and scales it.
+#' The function changes the scaling (default = /10000) and rejects inconsistend values (default = NA).
+#' The function writes scaled GeoTiffs and returns also a raster stack.
 #'
-#'@param input Input raster stack
-#'@param scalefac Set scaling factor (default= 10000), factor to divide initial MODIS-NDVI values
-#'@param incon Dealing with rejacted values (default = NA)
-#'@param outputpath Set output file path
+#' @param rstck rstck raster stack
+#' @param scalefac Set scaling factor (default= 10000), factor to divide initial raster values
+#' @param incon Dealing with rejected values (default = NA)
+#' @param outputfilepathes Set output file path
 #'
-#'@export scaleRaster
+#' @export scaleRaster
 #'
-#'@example
-#'/donotrun{
-#'fn <-
-#'scaling(input, scalefac = 10000, incon = NA)}
+#' @example
+#' /donotrun{
+#' fn <-
+#' scaling(rstck, scalefac = 1000, incon = NA)}
 #'
-scaleRaster <- function(input, scalefac = 10000, incon = NA, outputpath){
-  ## Input data:
-  p = "^.*_NDVI_.*\\.tif$"
-  fls_wht = base::list.files(path=input,pattern = p, full.names = TRUE)
-  rst_wht =  raster::stack(fls_wht)
-  fls_scl = base::paste0(outputpath, "SCL_", names(rst_wht))
-  lst_scl = foreach(i = unstack(rst_wht), j = as.list(fls_scl),
-                    .packages = c("raster", "rgdal"),
-                    .export = ls(envir = globalenv())) %dopar% {
+scaleRaster <- function(rstck, scalefac = 10000, incon = NA, outputfilepathes){
+  rstck_scaled = foreach(i = unstack(rstck), j = as.list(outputfilepathes),
+                         .packages = c("raster", "rgdal"),
+                         .export = ls(envir = globalenv())) %dopar% {
 
-                      ## scale factor (default 10000)
-                      rst = i
-                      rst = rst / scalefac
+                           ## scale factor
+                           rst = i / scalefac
 
-                      # rejection of inconsistent values
-                      id = which(rst[] < -1 | rst[] > 1)
+                           # set inconsistent values to NA
+                           id = which(rst[] < -1 | rst[] > 1)
+                           if (length(id) > 0) {
+                             rst[id] = incon
+                           }
 
-                      if (length(id) > 0) {
-                        rst[id] = incon ##default NA
-                      }
-
-                      # store data in .tif-file
-                      raster::writeRaster(rst, filename = j, format = "GTiff", overwrite = TRUE)
-                    }
-  lst_scl_sc <- raster::stack(lst_scl)
-  base::return(lst_scl_sc)
+                           # store data in .tif-file
+                           raster::writeRaster(rst, filename = j,
+                                               format = "GTiff",
+                                               overwrite = TRUE)
+                         }
+  rstck_scaled <- raster::stack(rstck_scaled)
+  return(rstck_scaled)
 }
