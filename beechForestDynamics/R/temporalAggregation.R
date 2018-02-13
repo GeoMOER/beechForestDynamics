@@ -1,19 +1,21 @@
-#'Temporal Composite
-#'@title temporal 
-#'@aliases temporal
+#'@title Temporal aggregation
+#'@aliases temporalAggregation
 #'@author Santwoski, A. & C. Weber
 #'@description The temporal function takes up the previously created scaled .tif-files (scaled-function).
-#'The function changes the input .tif-files to a stack with temporal composite. The function returns new calculated 
+#'The function changes the input .tif-files to a stack with temporal composite. The function returns new calculated
 #'.tif-files with pattern /day_of_the_year into the modis_doy_tiles file (The file must be created beforehand).
 #'The function requires the "raster" package.
 #'
 #'@param input Set input file (default= path_modis_whittaker_tiles, from 00_set_environment call)
 #'
-#'@example
-#'/donotrun{
-#'temporal(input)}
+#'@export temporalAggregation
+#'
+#'@examples
+#'\dontrun{
+#'temporalAggregation(input)
+#'}
 
-temporal=function(input){
+temporalAggregation=function(input){
   ## Input data:
   tiflist=list.dirs(input)[-1]
   files = list.files(tiflist, pattern = "^.*_NDVI_.*\\.tif$", full.names = TRUE)

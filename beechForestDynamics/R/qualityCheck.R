@@ -1,11 +1,10 @@
-#'Check quality of raster data
-#'@title Quality assurance
+#'@title Check quality of raster data
 #'@description Checks raster data with a quality layer. Replaces values with bad quality with NA.
 #'@export qualityCheck
 #'@examples
 #' \dontrun{
 #' quality_check(p = c("NDVI.tif$", "reliability.tif$"), path_modis_prj = path_modis_prj, path_modis_quality_checked = path_modis_quality_checked)
-#'          }
+#' }
 #'@param rstck_values \code{raster::stack} with data values
 #'@param rstck_quality \code{raster::stack} with ranked quality values
 #'@param outputfilepathes name and path of output files

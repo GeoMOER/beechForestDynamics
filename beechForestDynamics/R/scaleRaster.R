@@ -3,7 +3,8 @@
 #' @aliases Scaling
 #' @author Santwoski, A. & C. Weber
 #' @description The scaling function takes up a \code{raster::stack} and scales it.
-#' The function changes the scaling (default = /10000) and rejects inconsistend values (default = NA).
+#' @title Scale raster values
+#' @details The function changes the scaling (default = /10000) and rejects inconsistend values (default = NA).
 #' The function writes scaled GeoTiffs and returns also a raster stack.
 #'
 #' @param rstck rstck raster stack
@@ -13,10 +14,11 @@
 #'
 #' @export scaleRaster
 #'
-#' @example
-#' /donotrun{
+#' @examples
+#' \dontrun{
 #' fn <-
-#' scaling(rstck, scalefac = 1000, incon = NA)}
+#' scaling(rstck, scalefac = 1000, incon = NA)
+#' }
 #'
 scaleRaster <- function(rstck, scalefac = 10000, incon = NA, outputfilepathes){
   rstck_scaled = foreach(i = unstack(rstck), j = as.list(outputfilepathes),

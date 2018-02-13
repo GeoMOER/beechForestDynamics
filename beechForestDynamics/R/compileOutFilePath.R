@@ -1,30 +1,30 @@
-#' compileOutFilePath
-#' @title compileOutFilePath
-#' @aliases compileOutFilePath
-#' @author Nauss, T., Santowski, A. & C. Weber
+#' @title Compile output filepathes
+#' @author A. Santowski & C. Weber
 #'
 #' @description Creates output subdirectory for generated data. Directory will be at the same level like input filepath.
 #' It's possible to set different prefix or suffix to filename.
 #'
-#' @param input_filepath List of input files
+#' @param input_filepathes List of input files
 #' @param output_subdirectory output directory (name for output directory)
 #' @param prefix Set a new prefix to file-name (default = NA)
 #' @param suffix Set a new suffix to filename (default = NA)
 #'
 #' @export compileOutFilePath
+#' @aliases compileOutFilePath
 #'
 #' @usage
-#' my_outfilepathes = compileOutFilePath(input_filepath, output_subdirectory, prefix=NA, suffix=NA)
+#' my_outfilepathes = compileOutFilePath(input_filepathes, output_subdirectory, prefix=NA, suffix=NA)
 #'
-#' @example
-#' /donotrun{
-#' compileOutFilePath(input_filepath = "modis_filled_tiles",
-#' output_subdiretory = "filled", prefix= "tiles", suffix = "filled")}
+#' @examples
+#' \dontrun{
+#' compileOutFilePath(input_filepathes = "modis_filled_tiles",
+#' output_subdiretory = "filled", prefix= "tiles", suffix = "filled")
+#' }
 #'
 
-compileOutFilePath = function(input_filepath, output_subdirectory, prefix=NA, suffix=NA){
+compileOutFilePath = function(input_filepathes, output_subdirectory, prefix=NA, suffix=NA){
 
-  outputpath = base::paste0(dirname(dirname(input_filepath[[1]])), "/", output_subdirectory, "/")
+  outputpath = base::paste0(dirname(dirname(input_filepathes[[1]])), "/", output_subdirectory, "/")
   if(!dir.exists(outputpath))
     dir.create(outputpath)
 
@@ -39,7 +39,7 @@ compileOutFilePath = function(input_filepath, output_subdirectory, prefix=NA, su
     suffix = ""
   }
 
-    outfilepath = lapply(input_filepath, function(ifp){
+    outfilepath = lapply(input_filepathes, function(ifp){
       ifp = basename(ifp)
       ext_pos = base::regexpr("\\.[^\\.]*$", ifp)
       ext = base::substr(ifp, ext_pos, nchar(ifp))

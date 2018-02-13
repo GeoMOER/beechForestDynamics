@@ -1,5 +1,4 @@
-#' trend
-#' @title trend
+#' @title Compute Mann-Kendall trend
 #' @details rank correlation coefficient Tau
 #' need raster and gimms package
 #' @usage trend(file_in, p, prewhitening, method, filename)
@@ -10,8 +9,9 @@
 #' @param filename name and path of output files
 #' @return rst_stau; geo-tiff data
 #' @author HammerLe, Kleebaue
+#' @export mkTrend
 
-trend <- function(input, p, prewhitening, method, filename){
+mkTrend <- function(input, p, prewhitening, method, filename){
 
    #compute significantTau for input files
     rst_stau = gimms::significantTau(x = input,

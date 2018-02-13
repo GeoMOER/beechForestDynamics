@@ -1,3 +1,13 @@
+#' Compile raw test data
+#'
+#' @title compileRawTestData
+#' @aliases compileRawTestData
+#'
+#' @author T. Nauss
+#'
+#' @description Compile raw test data for this package
+#'
+
 compileRawTestData = function(){
 
 raster::writeRaster(rstck, filename = outfiles,

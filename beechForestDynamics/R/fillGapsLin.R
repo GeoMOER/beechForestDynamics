@@ -1,11 +1,8 @@
-#######################################################################################################
-##### fill gaps in temporal aggregation using linear interpolation ####
-#'@title fill gaps by linear interpolation
-#'@description subsets NAs by spacial linear interpolation
-#'@usage dependent of package "raster"
+#'@title Fill gaps by linear interpolation
+#'@description Subsets NAs by spacial linear interpolation
 #'@examples
 #' \dontrun{
-#' fill_gaps_lin(rst_fn, out_path)
+#' fillGapsLin(rst_fn, out_path)
 #' }
 #'
 #'@param rst_fn raster stack of scaled and temporal aggregated rasters = output of previous function (3rd function of temporal aggregation),
@@ -15,11 +12,11 @@
 #'                following folder structure of 00_set_environment.R this would mean: out_path = paste0(path_modis_filled_tiles)
 #'
 #'@return writes out rasters with no NA values
-#'
+#'@export fillGapsLin
 #'@references Nauss, T., Detsch, F.
 #'@author Johannes Schnell, Laura Giese
 
-fill_gaps_lin = function(rst_fn, out_path){
+fillGapsLin = function(rst_fn, out_path){
   lib = c("doParallel", "raster", "rgdal", "GSODTools")
   rst_fn_mat = raster::as.matrix(rst_fn)
   # 43701
@@ -57,22 +54,22 @@ fill_gaps_lin = function(rst_fn, out_path){
   rst_fn_filled = rst_fn
   rm(rst_fn)
   gc()
-  
+
   for(l in seq(nlayers(rst_fn_filled))){
     rst_fn_filled[[l]] = raster::setValues(rst_fn_filled[[l]], rst_fn_mat_filled[, l])
   }
-  
-  
+
+
   names(rst_fn_filled) = paste0("FLD_", names(rst_fn_filled))
   #subpath = paste0(path_modis_filled_tiles, basename(dir), "/")
   out_path -> subpath
   if (!dir.exists(subpath))
     dir.create(subpath, recursive = TRUE)
   fls_fn_filled = paste0(subpath, names(rst_fn_filled))
-  
+
   lst_fn_filled = foreach(i = raster::unstack(rst_fn_filled), j = as.list(fls_fn_filled)) %do% {
     raster::writeRaster(i, filename = j, format = "GTiff", overwrite = TRUE)
   }
-  
-  
+
+
 }
