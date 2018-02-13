@@ -3,6 +3,8 @@
 #' @details Creates a set of copies of R running in parallel and communicating over sockets &
 #' register the parallel backend with the foreach package.
 #'
+#' library(doParallel) needed
+#'
 #' @usage
 #' @param cores defines the number of cores used for calculating
 #' @References R Core Team
