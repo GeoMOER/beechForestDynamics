@@ -1,42 +1,34 @@
-#'Scaling MODIS-Data
-#'@title Scaling
+#'Scale Raster
+#'@title scaleRaster
 #'@aliases Scaling
 #'@author Santwoski, A. & C. Weber
-#'@description The scaling function takes up the previously created .tif-files that a  Whittaker smoother ran through.
-#'The function changes the scaling of the NDVI modis data (default = /10000), rejects inconsistend values (default = NA).
-#'The function returns new calculated .tif-files with pattern /SCL_ into the modis_scaled_tiles file. The function requires
-#'the "raster" and "rgdal" packages.
+#'@description The scaling function takes up a raster-stack [raster::stack()] and scales it.
+#'The function changes the scaling (default = /10000) and rejects inconsistend values (default = NA).
+#'The function returns new calculated .tif-files with pattern /SCL_ into output file path and returns also a raster stack.
 #'
-#'@param input Set input directory
-#'@param cores Set cores for parallel working (default = 1 core)
+#'@param input Input raster stack
 #'@param scalefac Set scaling factor (default= 10000), factor to divide initial MODIS-NDVI values
 #'@param incon Dealing with rejacted values (default = NA)
-#'@param output Set output directory
+#'@param outputpath Set output file path
+#'
+#'@export scaleRaster
 #'
 #'@example
 #'/donotrun{
-#'scaling(input,cores = 1, scalefac = 10000, incon = NA)}
+#'fn <-
+#'scaling(input, scalefac = 10000, incon = NA)}
 #'
-### outpath, temp, temp2 etc. , SCL_variabel
-
-scaling <- function(input,cores = 1, scalefac = 10000, incon = NA, output){
-  base::require(raster)
-  base::require(rgdal)
-  base::require(doParallel)
+scaleRaster <- function(input, scalefac = 10000, incon = NA, outputpath){
   ## Input data:
   p = "^.*_NDVI_.*\\.tif$"
   fls_wht = base::list.files(path=input,pattern = p, full.names = TRUE)
   rst_wht =  raster::stack(fls_wht)
-  fls_scl = base::paste0(output, "SCL_", names(rst_wht))
-  ## Do parallel
-  lib = c("doParallel", "raster", "rgdal", "GSODTools")
-  cl = parallel::makeCluster(cores) ## cores (default = 1)
-  doParallel::registerDoParallel(cl)
+  fls_scl = base::paste0(outputpath, "SCL_", names(rst_wht))
   lst_scl = foreach(i = unstack(rst_wht), j = as.list(fls_scl),
                     .packages = c("raster", "rgdal"),
                     .export = ls(envir = globalenv())) %dopar% {
 
-                      ## scale factor (default 10000 --> NDVI factor MODIS 0,00001)
+                      ## scale factor (default 10000)
                       rst = i
                       rst = rst / scalefac
 
@@ -50,9 +42,6 @@ scaling <- function(input,cores = 1, scalefac = 10000, incon = NA, output){
                       # store data in .tif-file
                       raster::writeRaster(rst, filename = j, format = "GTiff", overwrite = TRUE)
                     }
-  base::detach("package:raster")
-  base::detach("package:rgdal")
+  lst_scl_sc <- raster::stack(lst_scl)
+  base::return(lst_scl_sc)
 }
-
-scaling(input = "D:/modis_carpathian_mountains/modis/modis_whittaker_tiles/c0001-0511_r0001-0522/",
-        output = "D:/modis_carpathian_mountains/modis/modis_scaled_tiles/c0001-0511_r0001-0522/")
