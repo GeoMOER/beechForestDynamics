@@ -24,12 +24,12 @@
 tiles <- function(p, q, r, path_modis_quality_checked, path_modis_prj, tilenbr, overlap, outpath_NDVI, outpath_daynumber, outpath_qualitycheck){
   
   ndvi.rst.qa = raster::stack(list.files(path_modis_quality_checked, pattern = p, full.names = TRUE))
-  tileRaster(raster = ndvi.rst.qa, tilenbr, overlap, outpath_NDVI)
+  satelliteTools::tileRaster(raster = ndvi.rst.qa, tilenbr, overlap, outpath_NDVI)
   
   ndvi.rst.doy = raster::stack(list.files(path_modis_prj, pattern = p, full.names = TRUE))
-  tileRaster(raster = ndvi.rst.doy, tilenbr, overlap, outpath_daynumber)
+  satelliteTools::tileRaster(raster = ndvi.rst.doy, tilenbr, overlap, outpath_daynumber)
   
   ndvi.rst.doy = raster::stack(list.files(path_modis_prj, pattern = p, full.names = TRUE))
-  tileRaster(raster = ndvi.rst.doy, tilenbr, overlap, outpath_qualitycheck)
+  satelliteTools::tileRaster(raster = ndvi.rst.doy, tilenbr, overlap, outpath_qualitycheck)
  
 }
