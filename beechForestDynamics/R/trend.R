@@ -6,7 +6,7 @@
 #' @param p, numeric, defaults to 0.001. Significance level to be tested
 #' @param prewhitening,logical, If TRUE (default), pre-whitening is applied prior to the Mann-Kendall trend test.
 #' @param method The prewhitening method to apply ("yuepilon", "zhang")
-#' @param filename output filename
+#' @param filename writes output as filename in filename(dir)
 #' @return rst_stau; geo-tiff data
 #' @author HammerLe, Kleebaue
 
