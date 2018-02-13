@@ -1,14 +1,8 @@
 #'@title remove seasonality from raster time series
 #'@description removes seasonality from time series of scaled, temporal aggregated and filled (= NA-free) rasters (f.ex. NDVI-time-series)
-#'@usage input:
-#'       files = list.files(paste0(path_modis_filled_tiles), pattern = "FLD_.*\\.tif$", full.names = TRUE)
-#'       rst_fn_filled = stack(files)
-#'
-#'       dependent of package "raster" and "remote"
-#'
-#'@examples
+#'@examples for monthly annomalies
 #' \dontrun{
-#' deseason()
+#' deseason(your_raster_stack, outFilePath, 12L)
 #'          }
 #'@param rstack raster stack of scaled, temporal aggregated and filled (= NA-free) rasters = output of function "fill_gaps_lin"
 #'                    following folder structure of 00_set_environment.R this would mean: all rasters in path "path_modis_filled_tiles"
