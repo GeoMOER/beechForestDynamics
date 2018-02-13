@@ -1,49 +1,34 @@
+
+# kill all history -> rm(list = ls()) <- MArina will das in jedes Skript... Bitte ((erste Zeile))
+
 #' trend
 #' @title trend
 #' @details rank correlation coefficient Tau
-#' @usage significantTau(x, p, prewhitening, method, df, filename)
-#' @param x, either a Raster object or a numeric vector
+#' need raster and gimms package
+#' @usage trend(file_in, p, prewhitening, method, filename)
+#' @param file_in raster or numeric layer
 #' @param p, numeric, defaults to 0.001. Significance level to be tested
 #' @param prewhitening,logical, If TRUE (default), pre-whitening is applied prior to the Mann-Kendall trend test.
-#' @param method, character, The prewhitening method to apply,
-#' @param df,logical, defaults to FALSE. If TRUE, a data.frame holding the value of Kendall's ?? and the referring significance level.
-#' @param filename, character. Optional output filename.
-#' @return geo-tiff data
+#' @param method The prewhitening method to apply ("yuepilon", "zhang")
+#' @param filename writes output as filename in filename(dir)
+#' @return rst_stau; geo-tiff data
+#' @author HammerLe, Kleebaue
 
-#######################################################################################################
-##### trend #####
+trend <- function(file_in, p, prewhitening, method, filename){
 
-trend <- function(x, p, prewhitening, method, df, filename){
-   #set subpath
-  subpath = paste0(path_modis_mktrends_tiles, basename(dir), "/")
-      if (!dir.exists(subpath))
-      dir.create(subpath, recursive = TRUE)
-
-  #create files for significantTau from rasterstack deseason
-    fls_stau = paste0(subpath, "MK_", substr(names(rst_dsn)[1], 1, 25),
-                      substr(names(rst_dsn)[length(names(rst_dsn))],
-                             18, length(names(rst_dsn))))
-
-   #create vector for tau 1.000 and tau 0.010
-     fls_stau = c(paste0(fls_stau, "_tau_1.000.tif"),
-                 paste0(fls_stau, "_tau_0.010.tif"))
-   #compute significantTau for significance level 1.0 and 0.01
-    rst_stau_1000 = significantTau(rst_dsn, p = 1.0,
-                                   prewhitening = TRUE, method = "yuepilon",
-                                   filename = fls_stau[1])
-    rst_stau_0010 = significantTau(rst_dsn, p = 0.01,
-                                   prewhitening = TRUE, method = "yuepilon",
-                                   filename = fls_stau[2])
-
-    ## Combine trend tiles
-    #list tau 1.000 files
-    trends_stau_1000 = list.files(path_modis_mktrends_tiles, pattern = glob2rx("*tau_1.000.tif"),
-                                  recursive = TRUE, full.names = TRUE)
-    #merge tau 1.000 files
-    mergeTiledRasters(rasterlist = trends_stau_1000,  overlap = 10, outpath = paste0(path_modis_results, "MK_DSN_FLD_A2003_2016_tau_1.000.tif"))
-
-  }
+   #compute significantTau for input files
+    rst_stau = gimms::significantTau(x = file_in,
+                                     p = p,
+                                     prewhitening = prewhitening,
+                                     method = method,
+                                     filename = filename)
 
 
+    # store data in .tif-file
+    raster::writeRaster(rst_stau, filename = filename,
+                        format = "GTiff",
+                        overwrite = TRUE)
 
-
+   rst_stau <- raster::stack(rst_stau)
+   return(rst_stau)
+}
