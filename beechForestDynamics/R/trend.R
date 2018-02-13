@@ -18,5 +18,14 @@ trend <- function(file_in, p, prewhitening, method, filename){
                                      method = method,
                                      filename = filename)
 
-    return(rst_stau)
+    if (!dir.exists(filename[1]))
+      dir.create(filename[1], recursive = TRUE)
+
+    foreach(i = raster::unstack(rst_stau), j = as.list(filename)) %do% {
+      raster::writeRaster(i,
+                          filename = j,
+                          format = "GTiff",
+                          overwrite = TRUE)
     }
+    return(rst_stau)
+}
