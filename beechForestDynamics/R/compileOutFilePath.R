@@ -1,18 +1,26 @@
-#' Write name function
-#' @title writeName
-#' @aliases writeName
-#' @author Santowski, A. & C. Weber
-#' @description Creates new folder structure and file-names for output files constructed in other functions.
+#' compileOutFilePath
+#' @title compileOutFilePath
+#' @aliases compileOutFilePath
+#' @author Nauss, T., Santowski, A. & C. Weber
+#'
+#' @description Creates output subdirectory for generated data. Directory will be at the same level like input filepath.
+#' It's possible to set different prefix or suffix to filename.
 #'
 #' @param input_filepath List of input files
-#' @param output_subdirectory output directory
-#' @param prefix Set a new prefix to file-name (default = NA) - prefix or suffix must be set
-#' @param suffix Set a new suffix to filename (default = NA) - prefix or suffix must be set
+#' @param output_subdirectory output directory (name for output directory)
+#' @param prefix Set a new prefix to file-name (default = NA)
+#' @param suffix Set a new suffix to filename (default = NA)
 #'
 #' @export compileOutFilePath
 #'
 #' @usage
 #' my_outfilepathes = compileOutFilePath(input_filepath, output_subdirectory, prefix=NA, suffix=NA)
+#'
+#' @example
+#' /donotrun{
+#' compileOutFilePath(input_filepath = "modis_filled_tiles",
+#' output_subdiretory = "filled", prefix= "tiles", suffix = "filled")}
+#'
 
 compileOutFilePath = function(input_filepath, output_subdirectory, prefix=NA, suffix=NA){
 
@@ -40,6 +48,6 @@ compileOutFilePath = function(input_filepath, output_subdirectory, prefix=NA, su
       return(outfilepath)
     })
 
+  outfilepath <- unlist(outfilepath)
   return(outfilepath)
 }
-
