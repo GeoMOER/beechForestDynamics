@@ -10,6 +10,9 @@
 #' @param suffix Set a new suffix to filename (default = NA) - prefix or suffix must be set
 #'
 #' @export compileOutFilePath
+#'
+#' @usage
+#' my_outfilepathes = compileOutFilePath(input_filepath, output_subdirectory, prefix=NA, suffix=NA)
 
 compileOutFilePath = function(input_filepath, output_subdirectory, prefix=NA, suffix=NA){
 
