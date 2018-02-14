@@ -8,14 +8,14 @@
 #'
 #'@param raster_stack raster stack of scaled and temporal aggregated rasters
 #'@param out_path path to folder, where output should be stored
-#'
+#'                
 #'@return writes out rasters with no NA values
-#'@export fill_gaps_lin
+#'@export fillGapsLin()
 #'
 #'@references Nauss, T., Detsch, F.
 #'@author Johannes Schnell, Laura Giese
 
-fill_gaps_lin = function(raster_stack, outfilepath){
+fillGapsLin = function(raster_stack, outfilepath){
   lib = c("foreach", "doParallel", "raster", "rgdal", "GSODTools")
   raster_stack_mat = raster::as.matrix(raster_stack)
   # 43701
@@ -53,22 +53,22 @@ fill_gaps_lin = function(raster_stack, outfilepath){
   raster_stack_filled = raster_stack
   rm(raster_stack)
   gc()
-
+  
   for(l in seq(nlayers(raster_stack_filled))){
     raster_stack_filled[[l]] = raster::setValues(raster_stack_filled[[l]], raster_stack_mat_filled[, l])
   }
-
-
+  
+  
   #names(raster_stack_filled) = paste0(names_fill, names(raster_stack_filled))
   #subpath = paste0(path_modis_filled_tiles, basename(dir), "/")
   #input_filepath -> subpath
   if (!dir.exists(outfilepath))
     dir.create(dirname(outfilepath[1]), recursive = TRUE)
   fls_fn_filled = paste0(outfilepath, names(raster_stack_filled))
-
+  
   lst_fn_filled = foreach(i = raster::unstack(raster_stack_filled), j = as.list(outfilepath)) %do% {
     raster::writeRaster(i, filename = j, format = "GTiff", overwrite = TRUE)
   }
-
-
+  
+  
 }
