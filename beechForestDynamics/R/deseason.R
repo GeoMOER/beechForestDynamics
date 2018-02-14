@@ -29,7 +29,7 @@
 
 deseason = function(rstack,
                     outFilePath,
-                    cycle.window) {
+                    cycle.window = 24L) {
 
 
   rst_dsn = remote::deseason(rstack,
@@ -37,8 +37,8 @@ deseason = function(rstack,
                              use.cpp = TRUE)
 
 
-  if (!dir.exists(outFilePath[1]))
-    dir.create(outFilePath[1], recursive = TRUE)
+  if (!dir.exists(dirname(outFilePath[1])))
+    dir.create(dirname(outFilePath[1]), recursive = TRUE)
 
 
   foreach::foreach(i = raster::unstack(rst_dsn), j = as.list(outFilePath)) %do% {
