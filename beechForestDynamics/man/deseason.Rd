@@ -4,7 +4,7 @@
 \alias{deseason}
 \title{Remove seasonality from raster time series}
 \usage{
-deseason(rstack, outFilePath, cycle.window)
+deseason(rstack, outFilePath, cycle.window = 24L)
 }
 \arguments{
 \item{rstack}{raster stack of scaled, temporal aggregated and filled

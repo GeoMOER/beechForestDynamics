@@ -8,23 +8,23 @@ whittakerSmoother(input, quality_rst, doy_rst, begin, end, whittaker_files, lamb
 dependent on package "MODIS"
 }
 \arguments{
-\item{ndvi_oc_rst, }{stacked vegetation index files}
-
-\item{quality_rst, }{stacked quality checked files}
-
-\item{doy_rst, }{stacked day of year files}
-
 \item{lambda, }{integer, strength of smoothing}
 
 \item{nIter, }{integer, number of iteration for the upper envelope fitting}
 
 \item{threshold, }{integer, threshold for outlier values}
 
+\item{ndvi_oc_rst, }{stacked vegetation index files}
+
+\item{quality_rst, }{stacked quality checked files}
+
+\item{doy_rst, }{stacked day of year files}
+
+\item{whittaker_files, }{path where whittaker output files shall be stored}
+
 \item{prefix, }{character, file name prefix}
 
 \item{suffix, }{character, file name suffix}
-
-\item{whittaker_files, }{path where whittaker output files shall be stored}
 }
 \value{
 geo-tiff data
@@ -36,8 +36,7 @@ this function smoothes a time series vegetation index based on satellite data
 \dontrun{
 whittakerSmoother(ndvi_oc_rst = ndvi_oc_rst, quality_rst = path_modis_qua_tiles,
                    doy_rst = path_modis_doy_tiles, whittaker_files = path_modis_whittaker_tiles,
-                   lambda = 6000, nIter = 3, threshold = 2000
-                   prefix = "ab", suffix = "ws")
+                   lambda = 6000, nIter = 3, threshold = 2000)
 }
 }
 \references{

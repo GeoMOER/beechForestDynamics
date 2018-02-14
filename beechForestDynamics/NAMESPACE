@@ -3,7 +3,7 @@
 export(checkResults)
 export(compileOutFilePath)
 export(deseason)
-export(fill_gaps_lin)
+export(fillGapsLin)
 export(mkTrend)
 export(outlierCheck)
 export(qualityCheck)
