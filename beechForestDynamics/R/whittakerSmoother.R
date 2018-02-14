@@ -33,7 +33,7 @@ whittakerSmoother <- function(vi, names_vi = NA,
                               quality_stck=NULL,
                               doy_stck=NULL,
                               outfilepath,
-                              lambda, nIter, threshold){
+                              lambda, nIter, threshold, pillow=0){
 
   if(is.na(names_vi[1])){
     names_vi = names(vi)
@@ -48,5 +48,6 @@ whittakerSmoother <- function(vi, names_vi = NA,
                    lambda = lambda, nIter = nIter,
                    outDirPath = dirname(outfilepath),
                    outlierThreshold = threshold,
+                   pillow=pillow,
                    overwrite = TRUE, format = "raster")
 }
