@@ -70,5 +70,6 @@ fillGapsLin = function(raster_stack, outfilepath){
     raster::writeRaster(i, filename = j, format = "GTiff", overwrite = TRUE)
   }
 
+  return(raster_stack_filled)
 
 }
