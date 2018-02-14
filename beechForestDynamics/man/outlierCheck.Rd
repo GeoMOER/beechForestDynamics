@@ -9,11 +9,11 @@ outlierCheck(input, lq, uq)
 \arguments{
 \item{rstack}{Raster stack}
 
-\item{input, }{path where input is}
-
 \item{lq, }{Numeric, lower quantile limit}
 
 \item{uq, }{Numeric, upper quantile limit}
+
+\item{input, }{path where input is}
 
 \item{outfile}{vector with outfiles}
 }
