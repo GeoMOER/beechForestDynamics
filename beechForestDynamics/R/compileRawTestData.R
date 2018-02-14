@@ -10,8 +10,8 @@
 
 compileRawTestData = function(){
 
-  inpath = "F:/modis_carpathian_mountains/modis/tiles/c0001-0511_r0001-0522/"
-  outpath = "F:/modis_carpathian_mountains/data/data_small/modis/tiles/c0001-0511_r0001-0522/"
+  inpath = "F:/modis_carpathian_mountains/data/modis/tiles/c0001-0511_r0001-0522/"
+  outpath = "F:/modis_carpathian_mountains/data_small/modis/tiles/c0001-0511_r0001-0522/"
   dirs = list.dirs(inpath)[-1]
 
   for(dir in dirs){
