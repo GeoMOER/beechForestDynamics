@@ -11,7 +11,7 @@
 #' @return geo-tiff data
 
 
-outlierCheck <- function(rstack, outfilepathes){
+outlierCheck <- function(rstack, outfilepathes, lq, uq){
 
   #take the matix, go through all rows and calculate the outliers
   #based on the lower and upper quantile
@@ -22,9 +22,9 @@ outlierCheck <- function(rstack, outfilepathes){
               val = rstack_matrix[i, ]
               if(length(which(!is.na(val))) > 2){
                 id = GSODTools::tsOutliers(val,
-                                           lower_quantile = lower_quantile,
-                                           upper_quantile = upper_quantile,
-                                           index = index)
+                                           lower_quantile = lq,
+                                           upper_quantile = uq,
+                                           index = T)
                 val[id] = NA
               }
               return(matrix(val, ncol = length(val), byrow = TRUE))
@@ -36,14 +36,9 @@ outlierCheck <- function(rstack, outfilepathes){
 
   #assign outliers to layer
   for(l in seq(nlayers(rstack))){
-    rstack[[l]] = raster::setValues(rstack[[l]], rstack_matrix[, l])
+    rstack[[l]] = raster::setValues(rstack[[l]], rstack_matrix_sd[, l])
 
     writeRaster(rstack, format="GTiff",
                 filename= outfilepathes, overwrite=TRUE)
   }
 }
-
-
-
-# outlierCheck(rstack=rstack,
-#               outfilepathes = outfilepathes)
