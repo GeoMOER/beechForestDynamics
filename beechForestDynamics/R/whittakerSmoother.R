@@ -23,21 +23,30 @@
 #' \dontrun{
 #' whittakerSmoother(ndvi_oc_rst = ndvi_oc_rst, quality_rst = path_modis_qua_tiles,
 #'                    doy_rst = path_modis_doy_tiles, whittaker_files = path_modis_whittaker_tiles,
-#'                    lambda = 6000, nIter = 3, threshold = 2000
-#'                    prefix = "ab", suffix = "ws")
+#'                    lambda = 6000, nIter = 3, threshold = 2000)
 #'}
 
 ##### Whittaker smoother #####
-whittakerSmoother <- function(ndvi_oc_rst, quality_rst, doy_rst, output_subdirectory,
-                               lambda, nIter, threshold, prefix, suffix){
-  outfilepath <- compileOutFilePath(input_filepath = ndvi_oc_rst,
-                     output_subdirectory = output_subdirectory, prefix = prefix, suffix = suffix)
+whittakerSmoother <- function(vi, names_vi = NA,
+                              pos1=10, pos2=16,
+                              begin=NULL, end=NULL,
+                              quality_stck=NULL,
+                              doy_stck=NULL,
+                              outfilepath,
+                              lambda, nIter, threshold){
 
-      whittaker.raster(vi = ndvi_oc_rst, w = quality_rst, t = doy_rst,
-                       timeInfo = orgTime(vi),
-                       lambda = lambda, nIter = nIter,
-                       prefixSuffix = c(prefix, suffix),
-                       outDirPath = outfilepath,
-                       outlierThreshold = threshold,
-                       overwrite = TRUE, format = "raster")
+  if(is.na(names_vi[1])){
+    names_vi = names(vi)
+  }
+
+  vi = vi[[1:12]]
+  names_vi = names(vi)
+  timeinfo=MODIS::orgTime(basename(names_vi),nDays="asIn",begin=begin,end=end,pillow=0,pos1=pos1,pos2=pos2)
+
+  whittaker.raster(vi = vi, w = quality_stck, t = doy_stck,
+                   timeInfo = timeinfo,
+                   lambda = lambda, nIter = nIter,
+                   outDirPath = dirname(outfilepath),
+                   outlierThreshold = threshold,
+                   overwrite = TRUE, format = "raster")
 }
