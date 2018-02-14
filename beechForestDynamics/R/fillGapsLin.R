@@ -1,29 +1,28 @@
-#'@title Fill gaps by linear interpolation
-#'@description Subsets NAs by spacial linear interpolation
+#'@title fill gaps by linear interpolation
+#'@description subsets NAs by spacial linear interpolation
+#'@usage dependent of package "raster", "foreach", "doParallel", "raster", "rgdal", "GSODTools"
 #'@examples
 #' \dontrun{
-#' fillGapsLin(rst_fn, out_path)
+#' fill_gaps_lin(raster_stack, outfilepath)
 #' }
 #'
-#'@param rst_fn raster stack of scaled and temporal aggregated rasters = output of previous function (3rd function of temporal aggregation),
-#'              following folder structure of 00_set_environment.R this would mean: all rasters in path "path_modis_temp_agg_tiles"
-#'              rst_fn = stack(list.files(path_modis_temp_agg_tiles, pattern = glob2rx("*.tif"), full.names = TRUE))
+#'@param raster_stack raster stack of scaled and temporal aggregated rasters
 #'@param out_path path to folder, where output should be stored
-#'                following folder structure of 00_set_environment.R this would mean: out_path = paste0(path_modis_filled_tiles)
-#'
+#'                
 #'@return writes out rasters with no NA values
-#'@export fillGapsLin
+#'@export fill_gaps_lin()
+#'
 #'@references Nauss, T., Detsch, F.
 #'@author Johannes Schnell, Laura Giese
 
-fillGapsLin = function(rst_fn, out_path){
-  lib = c("doParallel", "raster", "rgdal", "GSODTools")
-  rst_fn_mat = raster::as.matrix(rst_fn)
+fill_gaps_lin = function(raster_stack, outfilepath){
+  lib = c("foreach", "doParallel", "raster", "rgdal", "GSODTools")
+  raster_stack_mat = raster::as.matrix(raster_stack)
   # 43701
-  rst_fn_mat_filled =
-    foreach(i = 1:nrow(rst_fn_mat), .packages = lib,
+  raster_stack_mat_filled =
+    foreach(i = 1:nrow(raster_stack_mat), .packages = lib,
             .export = ls(envir = globalenv())) %dopar% {
-              val = rst_fn_mat[i, ]
+              val = raster_stack_mat[i, ]
               val_length=length(val)
               if(sum(is.na(val))/val_length < 0.5){
                 nas = rle(is.na(val))
@@ -50,26 +49,26 @@ fillGapsLin = function(rst_fn, out_path){
               }
               return(matrix(val, ncol = length(val), byrow = TRUE))
             }
-  rst_fn_mat_filled = do.call("rbind", rst_fn_mat_filled)
-  rst_fn_filled = rst_fn
-  rm(rst_fn)
+  raster_stack_mat_filled = do.call("rbind", raster_stack_mat_filled)
+  raster_stack_filled = raster_stack
+  rm(raster_stack)
   gc()
-
-  for(l in seq(nlayers(rst_fn_filled))){
-    rst_fn_filled[[l]] = raster::setValues(rst_fn_filled[[l]], rst_fn_mat_filled[, l])
+  
+  for(l in seq(nlayers(raster_stack_filled))){
+    raster_stack_filled[[l]] = raster::setValues(raster_stack_filled[[l]], raster_stack_mat_filled[, l])
   }
-
-
-  names(rst_fn_filled) = paste0("FLD_", names(rst_fn_filled))
+  
+  
+  #names(raster_stack_filled) = paste0(names_fill, names(raster_stack_filled))
   #subpath = paste0(path_modis_filled_tiles, basename(dir), "/")
-  out_path -> subpath
-  if (!dir.exists(subpath))
-    dir.create(subpath, recursive = TRUE)
-  fls_fn_filled = paste0(subpath, names(rst_fn_filled))
-
-  lst_fn_filled = foreach(i = raster::unstack(rst_fn_filled), j = as.list(fls_fn_filled)) %do% {
+  #input_filepath -> subpath
+  if (!dir.exists(outfilepath))
+    dir.create(dirname(outfilepath[1]), recursive = TRUE)
+  fls_fn_filled = paste0(outfilepath, names(raster_stack_filled))
+  
+  lst_fn_filled = foreach(i = raster::unstack(raster_stack_filled), j = as.list(outfilepath)) %do% {
     raster::writeRaster(i, filename = j, format = "GTiff", overwrite = TRUE)
   }
-
-
+  
+  
 }
