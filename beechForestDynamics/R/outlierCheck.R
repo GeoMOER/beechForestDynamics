@@ -43,4 +43,6 @@ outlierCheck <- function(rstack, outfilepathes, lq, uq){
     writeRaster(rstack[[l]], format="GTiff",
                 filename= outfilepathes[l], overwrite=TRUE, bylayer=T)
   }
+
+  return(rstack)
 }
