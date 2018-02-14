@@ -16,7 +16,7 @@
 
 qualityCheck <- function(rstck_values, rstck_quality, outputfilepathes){
 
-  qa = foreach(i = raster::unstack(rstck_values), j = rstck_quality,k=outputfilepathes,
+  qa = foreach(i = raster::unstack(rstck_values), j = rstck_quality, k = outputfilepathes,
                .packages = c("doParallel", "raster", "rgdal", "GSODTools"),
                .export = ls(envir = globalenv())) %dopar% {
                  raster::overlay(i, j, fun = function(x, y) {
