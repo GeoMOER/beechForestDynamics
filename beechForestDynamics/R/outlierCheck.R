@@ -38,7 +38,7 @@ outlierCheck <- function(rstack, outfilepathes, lq, uq){
   for(l in seq(nlayers(rstack))){
     rstack[[l]] = raster::setValues(rstack[[l]], rstack_matrix_sd[, l])
 
-    writeRaster(rstack, format="GTiff",
-                filename= outfilepathes, overwrite=TRUE)
+    writeRaster(rstack[[l]], format="GTiff",
+                filename= outfilepathes, overwrite=TRUE, bylayer=T)
   }
 }
