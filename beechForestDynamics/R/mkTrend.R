@@ -21,11 +21,4 @@ mkTrend <- function(input, p, prewhitening, method, filename){
                                      filename = filename)
 
 
-    # store data in .tif-file
-    raster::writeRaster(rst_stau, filename = filename,
-                        format = "GTiff",
-                        overwrite = TRUE)
-
-   rst_stau <- raster::stack(rst_stau)
-   return(rst_stau)
 }
