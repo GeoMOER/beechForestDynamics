@@ -43,12 +43,23 @@ whittakerSmoother <- function(vi, names_vi = NA,
   names_vi = names(vi)
   timeInfo = MODIS::orgTime(basename(names_vi),nDays="asIn",begin=begin,end=end,pillow=pillow,pos1=pos1,pos2=pos2)
 
-  whittaker.raster(vi = vi, w = quality_stck, t = doy_stck,
-                   removeOutlier = TRUE,
-                   threshold = 2000,
-                   timeInfo = timeInfo,
-                   lambda = lambda, nIter = nIter,
-                   prefixSuffix = prefixSuffix,
-                   outDirPath = outfilepath,
-                   overwrite = TRUE, format = "raster")
+  wrst = MODIS::whittaker.raster(vi = vi, w = quality_stck, t = doy_stck,
+                          removeOutlier = TRUE,
+                          threshold = 2000,
+                          timeInfo = timeInfo,
+                          lambda = lambda, nIter = nIter,
+                          prefixSuffix = prefixSuffix,
+                          outDirPath = outfilepath,
+                          overwrite = TRUE, format = "raster")
+
+  # Rename files
+  lambda_str = paste0("yL", lambda, ".")
+
+  outfiles = list.files(outfilepath,pattern = glob2rx("*.tif"), full.names = TRUE)
+  newnames = gsub("MYD13Q1.", "MYD13Q1.A", outfiles)
+  newnames = gsub(lambda_str, "", newnames)
+  file.rename(outfiles, newnames)
+
+  wrst = raster::stack(newnames)
+  return(wrst)
 }
