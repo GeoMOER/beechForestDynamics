@@ -4,15 +4,18 @@
 \alias{temporalAggregation}
 \title{Temporal aggregation}
 \usage{
-temporalAggregation(rstack, rstack_doy, layer_dates, outputfilepathes,
-  interval = "fortnight", fun = max, na.rm = TRUE, cores = 4L)
+temporalAggregation(rstack, rstack_doy, pos1 = 10, pos2 = 16,
+  outputfilepathes, interval = "fortnight", fun = max, na.rm = TRUE,
+  cores = 4L)
 }
 \arguments{
 \item{rstack}{Raster stack of MODIS composite files}
 
 \item{rstack_doy}{Raster stack of associated day of year information to rstack}
 
-\item{layer_dates}{Date vector corresponding to input layers (see MODIS::temporalComposite)}
+\item{pos1}{Start position of date information in names(rstack) (format: YYYYJJJ)}
+
+\item{pos2}{End position of date information in names(rstack) (format: YYYYJJJ)}
 
 \item{outputfilepathes}{Full path and names of all output layers to be written to disk}
 

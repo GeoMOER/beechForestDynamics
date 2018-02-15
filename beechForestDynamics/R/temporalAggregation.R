@@ -39,12 +39,10 @@ temporalAggregation = function(rstack, rstack_doy, pos1 = 10, pos2 = 16, outputf
                        names(rst),
                        substr(outfilepath, pos2+1, nchar(outfilepath)))
 
+  names(rst) = basename(outfilepath)
   foreach(i = raster::unstack(rst), j = as.list(outfilepath)) %dopar% {
     raster::writeRaster(i, filename = j, format = "GTiff", overwrite = TRUE)
   }
-
-  writeRaster(rst_fn, filename = rst_fn_names,
-              format = "GTiff", bylayer = TRUE, overwrite = TRUE)
 
   return(rst)
 }
