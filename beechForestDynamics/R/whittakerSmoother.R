@@ -32,6 +32,7 @@ whittakerSmoother <- function(vi, names_vi = NA,
                               begin=NULL, end=NULL,
                               quality_stck=NULL,
                               doy_stck=NULL,
+                              prefixSuffix = c("MCD", "ndvi"),
                               outfilepath,
                               lambda, nIter, threshold, pillow=0){
 
@@ -39,15 +40,15 @@ whittakerSmoother <- function(vi, names_vi = NA,
     names_vi = names(vi)
   }
 
-  vi = vi[[1:12]]
   names_vi = names(vi)
-  timeinfo=MODIS::orgTime(basename(names_vi),nDays="asIn",begin=begin,end=end,pillow=0,pos1=pos1,pos2=pos2)
+  timeInfo = MODIS::orgTime(basename(names_vi),nDays="asIn",begin=begin,end=end,pillow=pillow,pos1=pos1,pos2=pos2)
 
   whittaker.raster(vi = vi, w = quality_stck, t = doy_stck,
-                   timeInfo = timeinfo,
+                   removeOutlier = TRUE,
+                   threshold = 2000,
+                   timeInfo = timeInfo,
                    lambda = lambda, nIter = nIter,
-                   outDirPath = dirname(outfilepath),
-                   outlierThreshold = threshold,
-                   pillow=pillow,
+                   prefixSuffix = prefixSuffix,
+                   outDirPath = outfilepath,
                    overwrite = TRUE, format = "raster")
 }
