@@ -23,5 +23,9 @@ checkResults = function(file, subpath_file, subpath_test){
   testfile = raster(gsub(subpath_file, subpath_test, file))
   file = raster(file)
   results = getValues(file/testfile)
-  return(all(results == 1))
+  if(all(results == 1)){
+    return(TRUE)
+  } else {
+    return(list(summary(results), results))
+  }
 }
