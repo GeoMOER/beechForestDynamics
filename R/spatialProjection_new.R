@@ -3,8 +3,8 @@
 #' @details  Projects a tif files into another projection from a given tif file.
 #' @usage spatialProjection=function(rst_from,prst_to,outfilepath)
 #' dependent on package "raster" and "rgdal"
-#' @param rst_from List of input tif files
-#' @param prst_to List of designated projected tif files
+#' @param list_rst_from charachter string: List of input tif files
+#' @param list_prst_to charachter string: List of designated projected tif files
 #' @param outfilepath path where output tif files shall be stored
 #' @param areaname three letters shortcut for study area
 #' @return geo tif data 
@@ -33,4 +33,3 @@ spatialProjection = function(list_rst_from, list_prst_to, outfilepath, areaname=
     
   }
 }
-
