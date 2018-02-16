@@ -14,6 +14,8 @@ dependent on package "MODIS"
 
 \item{threshold, }{integer, threshold for outlier values}
 
+\item{cores}{integer, cores to be used in parallel mode}
+
 \item{ndvi_oc_rst, }{stacked vegetation index files}
 
 \item{quality_rst, }{stacked quality checked files}

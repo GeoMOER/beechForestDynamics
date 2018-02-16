@@ -11,6 +11,7 @@
 #' @param threshold, integer, threshold for outlier values
 #' @param prefix, character, file name prefix
 #' @param suffix, character, file name suffix
+#' @param cores integer, cores to be used in parallel mode
 #'
 #' @return geo-tiff data
 #'
@@ -34,7 +35,8 @@ whittakerSmoother <- function(vi, names_vi = NA,
                               doy_stck=NULL,
                               prefixSuffix = c("MCD", "ndvi"),
                               outfilepath,
-                              lambda, nIter, threshold, pillow=0){
+                              lambda, nIter, threshold, pillow=0,
+                              cores = 4){
 
   if(is.na(names_vi[1])){
     names_vi = names(vi)
@@ -43,6 +45,7 @@ whittakerSmoother <- function(vi, names_vi = NA,
   names_vi = names(vi)
   timeInfo = MODIS::orgTime(basename(names_vi),nDays="asIn",begin=begin,end=end,pillow=pillow,pos1=pos1,pos2=pos2)
 
+  # beginCluster(cores)
   wrst = MODIS::whittaker.raster(vi = vi, w = quality_stck, t = doy_stck,
                           removeOutlier = TRUE,
                           threshold = 2000,
@@ -51,6 +54,8 @@ whittakerSmoother <- function(vi, names_vi = NA,
                           prefixSuffix = prefixSuffix,
                           outDirPath = outfilepath,
                           overwrite = TRUE, format = "raster")
+
+  # endCluster()
 
   # Rename files
   lambda_str = paste0("yL", lambda, ".")
