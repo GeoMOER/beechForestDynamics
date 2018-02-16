@@ -22,7 +22,7 @@ spatialProjection = function(list_rst_from, list_prst_to, outfilepath, areaname=
   years=as.numeric(substr(basename(path = list_rst_from),10,13))
   
   for (i in years){
-    mswep_stack=raster::stack(list_rst_from[which(i==substr(basename(path = list_rst_from),16,19))])
+    mswep_stack=raster::stack(list_rst_from[which(i==substr(basename(path = list_rst_from),10,13))])
     
     proj_tile=raster(list_prst_to[1])
     
