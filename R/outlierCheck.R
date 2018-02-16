@@ -35,14 +35,18 @@ outlierCheck <- function(rstack, outfilepathes, lq, uq){
   gc()
 
 
-  rstack_temp = rstack
-  #assign outliers to layer
-  for(l in seq(nlayers(rstack))){
-    rstack[[l]] = raster::setValues(rstack[[l]], rstack_matrix_sd[, l])
+  rstack = foreach::foreach(i = raster::unstack(rstack),
+                            j = as.list(outfilepathes),
+                            k = lapply(seq(ncol(rstack_matrix_sd)), function(i){rstack_matrix_sd[,i]})) %dopar% {
+                              i = raster::setValues(i, k)
+                              raster::writeRaster(i,
+                                                  filename = j,
+                                                  format = "GTiff",
+                                                  overwrite = TRUE)
+                              return(i)
+                            }
 
-    writeRaster(rstack[[l]], format="GTiff",
-                filename= outfilepathes[l], overwrite=TRUE, bylayer=T)
-  }
+  rstack = stack(rstack)
 
   return(rstack)
 }

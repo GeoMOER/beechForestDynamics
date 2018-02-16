@@ -45,7 +45,11 @@ whittakerSmoother <- function(vi, names_vi = NA,
   names_vi = names(vi)
   timeInfo = MODIS::orgTime(basename(names_vi),nDays="asIn",begin=begin,end=end,pillow=pillow,pos1=pos1,pos2=pos2)
 
-  # beginCluster(cores)
+  # Remove files in destination folder
+  frm = list.files(outfilepath, full.names = TRUE)
+  frm = file.remove(frm)
+
+  beginCluster(cores)
   wrst = MODIS::whittaker.raster(vi = vi, w = quality_stck, t = doy_stck,
                           removeOutlier = TRUE,
                           threshold = 2000,
@@ -55,7 +59,7 @@ whittakerSmoother <- function(vi, names_vi = NA,
                           outDirPath = outfilepath,
                           overwrite = TRUE, format = "raster")
 
-  # endCluster()
+  endCluster()
 
   # Rename files
   lambda_str = paste0("yL", lambda, ".")
