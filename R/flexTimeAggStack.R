@@ -3,7 +3,7 @@
 #' dependent on package "raster" & "rgdal"
 #' @param beginzeitsp, integer, year of start
 #' @param endzeitsp, integer, year of end
-#' @param dates_path, filepath to sorted and listet data with date info
+#' @param dates, sorted date information
 #' @param aggrdata, filepath to stored data which shall be temporally aggregated
 #' @param edit, character, shortnote for data [MAX 3 LETTERS]
 #' @param outfilepath, path to store temporal aggregated tif files
@@ -18,9 +18,9 @@
 #' @author A. Santowski & L. Giese
 #' #'@examples
 #' \dontrun{
-#' flexTimeAggStack=function(beginnzeitsp,endzeitsp,dates_path,aggrdata,outfilepath,edit="kap")
+#' flexTimeAggStack=function(beginnzeitsp,endzeitsp,dates,aggrdata,outfilepath,edit="kap")
 #' }
-flexTimeAggStack=function(beginnzeitsp,endzeitsp,dates_path,aggrdata,outfilepath,edit="kap",a=1,b=4,c=5,d=7){
+flexTimeAggStack=function(beginnzeitsp,endzeitsp,dates,aggrdata,outfilepath,edit="kap",a=1,b=4,c=5,d=7){
 
   for(j in seq(beginnzeitsp,endzeitsp)){
     print(j)
