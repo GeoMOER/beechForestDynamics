@@ -18,7 +18,8 @@ mkTrend <- function(input, p, prewhitening, method, filename){
                                      p = p,
                                      prewhitening = prewhitening,
                                      method = method,
-                                     filename = filename)
+                                     filename = filename,
+                                     overwrite=T)
 
 
 }
