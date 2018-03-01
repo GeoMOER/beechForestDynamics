@@ -4,13 +4,13 @@
 \alias{flexTimeAggStack}
 \title{flexTimeAggStack}
 \usage{
-flexTimeAggStack(beginnzeitsp, endzeitsp, dates_path, aggrdata, outfilepath,
+flexTimeAggStack(beginnzeitsp, endzeitsp, dates, aggrdata, outfilepath,
   edit = "kap", a = 1, b = 4, c = 5, d = 7)
 }
 \arguments{
 \item{endzeitsp, }{integer, year of end}
 
-\item{dates_path, }{filepath to sorted and listet data with date info}
+\item{dates, }{sorted date information}
 
 \item{aggrdata, }{filepath to stored data which shall be temporally aggregated}
 
@@ -39,6 +39,6 @@ dependent on package "raster" & "rgdal"
 A. Santowski & L. Giese
 #'@examples
 \dontrun{
-flexTimeAggStack=function(beginnzeitsp,endzeitsp,dates_path,aggrdata,outfilepath,edit="kap")
+flexTimeAggStack=function(beginnzeitsp,endzeitsp,dates,aggrdata,outfilepath,edit="kap")
 }
 }

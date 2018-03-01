@@ -27,7 +27,9 @@ flexTimeAggStack=function(beginnzeitsp,endzeitsp,dates,aggrdata,outfilepath,edit
 
     lc = substr(dates[substr(dates, a, b) == j], c, d)
     l = as.numeric(lc)
-    stacklist=raster::stack(aggrdata[which(j == seq(beginnzeitsp,endzeitsp))])
+
+
+    stacklist=raster::stack(aggrdata[grep(j, basename(aggrdata))])
 
     foreach(i=seq(1:(length(l))),
             .export=c("stacklist", "outfilepath", "edit"),
@@ -38,8 +40,11 @@ flexTimeAggStack=function(beginnzeitsp,endzeitsp,dates,aggrdata,outfilepath,edit
               } else {
                 temp_agg=sum(stacklist[[l[i]:(l[i+1]-1)]])
               }
+
+              if (!dir.exists(outfilepath))
+                dir.create(outfilepath, recursive = TRUE)
               raster::writeRaster(temp_agg,
-                                  paste0(outfilepath, "MSWEP_",edit,"_", j, lc[i], "_temporal_aggregated"),
+                                  paste0(outfilepath, "/MSWEP_",edit,"_", j, lc[i], "_ta"),
                                   format="GTiff",overwrite=T)
 
             }

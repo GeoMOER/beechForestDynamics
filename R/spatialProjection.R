@@ -7,7 +7,7 @@
 #' @param list_prst_to charachter string: List of designated projected tif files
 #' @param outfilepath path where output tif files shall be stored
 #' @param areaname three letters shortcut for study area
-#' @return geo tif data 
+#' @return geo tif data
 #' @export spatialProjection
 #' @aliases spatialProjection
 #' @examples
@@ -18,18 +18,25 @@
 
 
 ###function
-spatialProjection = function(list_rst_from, list_prst_to, outfilepath, areaname=NULL, a=11, b=14, c=11, d=14){
+spatialProjection = function(list_rst_from, list_prst_to, outfilepath, areaname=NULL, a=12, b=15){
+
   years=unique(as.numeric(substr(basename(path = list_rst_from), a, b)))
-  
-  for (i in years){
-    mswep_stack=raster::stack(list_rst_from[which(i==substr(basename(path = list_rst_from), c, d))])
-    
-    proj_tile=raster(list_prst_to[1])
-    
+
+  foreach(i=years,
+  .export=ls(envir = globalenv()),
+  .packages = c("raster", "rgdal")) %dopar%{
+    mswep_stack=raster::stack(list_rst_from[which(i==substr(basename(path = list_rst_from), a, b))])
+
+    proj_tile=raster(list_prst_to)
+
+    if (!dir.exists(outfilepath))
+      dir.create(outfilepath, recursive = TRUE)
+
     projectRaster(from=mswep_stack, to=proj_tile,
-                  method="bilinear", 
-                  filename=paste0(outfilepath, "MSWEP_",areaname, i,"_projected"),
-                  format="GTiff", overwrite = T, bylayer=F) 
-    
+                  method="bilinear",
+                  filename=paste0(outfilepath, "/MSWEP_",areaname, i,"_projected"),
+                  format="GTiff", overwrite = T, bylayer=F)
+
   }
+
 }
